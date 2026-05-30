@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Rainforest Guardian · Dart Extension Methods | Sesi 9</title>
+    <style>
+        body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #f1f5f9, #dbeafe);
+      line-height: 1.6;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-left: 5px solid #2563eb;
+      padding-left: 10px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    hr {
+      margin: 50px 0;
+      border: none;
+      height: 1px;
+      background: #cbd5e1;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 14px;
+      text-align: center;
+      color: #475569;
+    }
+
+    /* BUTTON */
+    .btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 18px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #1e40af;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      width: 90%;
+      max-width: 900px;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 22px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .close:hover {
+      color: #2563eb;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    pre {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+   
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Hero section seperti rainforest guardian vibe (KONTEN TIDAK BERUBAH) -->
+    <div class="card">
+        <h1>SESI 11: Redirecting Constructors</h1>
+        </div>
+
+    <!-- Slide 1: Review Builder Pattern -->
+    <div class="card">
+        <div class="card-header"><h2> Review Sesi 10 <span class="badge-leaf"> Factory Constructors </span></h2></div>
+        <div class="card-body">
+            <ul>
+                <li>Factory constructor:factory Class.name()</li>
+                <li>Bisa return instance yang sudah ada atau subclass</li>
+                <li>Use cases: singleton, caching, object pools</li>
+                <li>🐞 Contoh cepat:</li>
+            </ul>
+            <pre>factory Shape.circle() => Circle();</pre>
+        </div>
+    </div>
+
+    <!-- Slide 2: Pengantar Extension Methods -->
+    <div class="card">
+        <div class="card-header"><h2>Pengantar Redirecting Constructors</h2></div>
+        <div class="card-body">
+            <ul>
+                <li>Apa itu? Constructor yang "mengalihkan" ke constructor lain di kelas yang sama</li>
+                <li>Tujuan: Mengurangi duplikasi kode (DRY principle)</li>
+                <li>Sintaks: this(...) di initializer list</li>
+                <li>Tidak punya body (tidak ada { } )</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 3: Masalah Tanpa Extension Methods -->
+    <div class="card">
+        <div class="card-header"><h2>Sintaks Dasar Redirecting Constructor</h2></div>
+        <div class="card-body">
+            <pre>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+class Point {
+final double x;
+final double y;
+// Konstruktor utama
+Point(this.x, this.y) {
+// print('Point created at ($x, $y)');
+}
+// Konstruktor pengarah (redirecting constructor) - mengarah ke konstruktor utama
+Point.origin() : this(0, 0);
+Point.onXAxis(double x) : this(x, 0);
+Point.onYAxis(double y) : this(0, y);
+@override
+String toString() {
+return 'Point($x, $y)';
+}
+}
+void main() {
+// Penggunaan
+var origin = Point.origin(); // Point(0, 0)
+var pointOnX = Point.onXAxis(5); // Point(5, 0)
+var pointOnY = Point.onYAxis(3); // Point(0, 3)
+  
+  // Cetak variabel origin, pointOnX, dan pointOnY
+print('Origin: $origin');
+print('Point on X-axis: $pointOnX');
+print('Point on Y-axis: $pointOnY');
+}</pre>
+        </div>
+        <button class="btn" onclick="openModal('84b62f045af0a12893decc0c2753b1db')">
+        Lihat Kode
+      </button>
+    </div>
+
+  
+
+
+ <!-- Slide 4: Solusi dengan Extension Methods -->
+    <div class="card">
+        <div class="card-header"><h2> Masalah Tanpa Redirecting Constructor</h2></div>
+        <div class="card-body">
+    <pre>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+   class Rectangle {
+final double width;
+final double height;
+Rectangle(this.width, this.height);
+// Tanpa redirecting - duplikasi logika
+Rectangle.square(double side) {
+width = side;    
+// ERROR: final field
+height = side;
+}
+Rectangle.withDefault() {
+width = 100;     
+height = 50;
+}
+}</pre>
+        </div>
+        <button class="btn" onclick="openModal('26747f4d6cbd5c672154478070e37a29')">
+        Lihat Kode
+      </button>
+    </div>
+
+  <!-- Slide 5: Sintaks Extension -->
+    <div class="card">
+        <div class="card-header"><h2> Solusi dengan Redirecting Constructor</h2></div>
+        <div class="card-body">
+            <pre>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+class Rectangle {
+final double width;
+final double height;
+// Main constructor
+Rectangle(this.width, this.height) {
+print('Rectangle $width x $height created');
+}
+// Redirecting constructor
+Rectangle.square(double side) : this(side, side);
+Rectangle.withDefault() : this(100, 50);
+Rectangle.fromWidth(double width) : this(width, width * 0.618); // Golden ratio
+@override
+String toString() {
+return 'Rectangle(width: ${width.toStringAsFixed(2)}, height: ${height.toStringAsFixed(2)})';
+}
+}
+void main(){
+// Penggunaan
+var square = Rectangle.square(10);      
+// 10x10
+var defaultRect = Rectangle.withDefault(); // 100x50
+var goldenRect = Rectangle.fromWidth(100); // 100x61.8
+print('Square: $square');
+print('Default Rectangle: $defaultRect');
+print('Golden Ratio Rectangle: $goldenRect');
+}
+                
+</pre>
+        </div>
+         <button class="btn" onclick="openModal('64c817f6849ce3aa9e012c99bd8d0d6a')">
+        Lihat Kode
+      </button>
+
+    </div>
+    
+  
+    <!-- Tipe yang didukung + contoh IntListExtensions -->
+    <div class="card">
+        <div class="card-header"><h2>Redirecting Constructor dengan Named Parameters</h2></div>
+        <div class="card-body">
+            <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A            
+   class Person {
+final String name;
+final int age;
+final String? email;
+// Main constructor dengan named parameters
+Person({required this.name, required this.age, this.email});
+// Redirecting dengan default values
+Person.anonymous() : this(name: 'Anonymous', age: 0);
+Person.fromName(String name) : this(name: name, age: 0);
+Person.adult(String name) : this(name: name, age: 18);
+Person.child(String name, int years)
+: this(name: name, age: years, email: null);
+@override
+String toString() {
+return 'Name: $name, Age: $age, Email: ${email ?? "N/A"}';
+}
+}
+</code></pre>
+        </div>
+    </div>
+
+    <!-- Slide 7: Null Safety -->
+    <div class="card">
+        <div class="card-header"><h2> Praktik 1 – Configuration Class</h2></div>
+        <div class="card-body">
+            <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A               
+class DatabaseConfig {
+  final String host;
+  final int port;
+  final String username;
+  final String password;
+  final String database;
+  final bool useSSL;
+
+  DatabaseConfig({
+    required this.host,
+    required this.port,
+    required this.username,
+    required this.password,
+    required this.database,
+    this.useSSL = false,
+  });
+
+  DatabaseConfig.development()
+      : this(
+          host: 'localhost',
+          port: 5432,
+          username: 'dev_user',
+          password: 'dev_pass',
+          database: 'dev_db',
+          useSSL: false,
+        );
+
+  DatabaseConfig.production()
+      : this(
+          host: 'db.example.com',
+          port: 5432,
+          username: 'prod_user',
+          password: 'prod_pass',
+          database: 'prod_db',
+          useSSL: true,
+        );
+
+  DatabaseConfig.localhost()
+      : this(
+          host: 'localhost',
+          port: 3306,
+          username: 'root',
+          password: '',
+          database: 'test',
+        );
+
+  DatabaseConfig.withHost(String host, String database)
+      : this(
+          host: host,
+          port: 5432,
+          username: 'default',
+          password: 'password',
+          database: database,
+        );
+
+  @override
+  String toString() {
+    return 'DatabaseConfig(\n'
+        '  host: $host,\n'
+        '  port: $port,\n'
+        '  username: $username,\n'
+        '  password: ${'*' * password.length},\n'
+        '  database: $database,\n'
+        '  useSSL: $useSSL\n'
+        ')';
+  }
+}
+
+void main() {
+  var devConfig = DatabaseConfig.development();
+  var prodConfig = DatabaseConfig.production();
+  var localConfig = DatabaseConfig.localhost();
+  var customConfig = DatabaseConfig.withHost('192.168.1.1', 'custom_db');
+  
+  print(devConfig);
+  print(prodConfig);
+  print(localConfig);
+  print(customConfig);
+}
+
+            </code></pre>
+             <button class="btn" onclick="openModal('8f76d6b3b2b4abc829be7757c3970084')">
+        Lihat Kode
+      </button>
+        </div>
+    </div>
+
+    <!-- Slide 8: Praktik 1 NumberExtensions (Rupiah, range, pangkat) -->
+    <div class="card">
+        <div class="card-header"><h2> Redirecting Constructor dengan Validasi</h2></div>
+        <div class="card-body">
+            <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A                
+class BankAccount {
+  final String accountNumber;
+  final String ownerName;
+  final double balance;
+
+  BankAccount._({
+    required this.accountNumber,
+    required this.ownerName,
+    required this.balance,
+  });
+
+  factory BankAccount.create({
+    required String accountNumber,
+    required String ownerName,
+    double initialBalance = 0,
+  }) {
+    if (accountNumber.isEmpty) {
+      throw ArgumentError('Nomor akun tidak boleh kosong');
+    }
+    if (ownerName.isEmpty) {
+      throw ArgumentError('Nama pemilik tidak boleh kosong');
+    }
+    if (initialBalance < 0) {
+      throw ArgumentError('Saldo awal tidak boleh negatif');
+    }
+
+    return BankAccount._(
+      accountNumber: accountNumber,
+      ownerName: ownerName,
+      balance: initialBalance,
+    );
+  }
+
+  factory BankAccount.fromJson(Map<String, dynamic> json) {
+    try {
+      return BankAccount.create(
+        accountNumber: json['accountNumber']?.toString() ?? '',
+        ownerName: json['ownerName']?.toString() ?? '',
+        initialBalance: (json['balance'] as num?)?.toDouble() ?? 0,
+      );
+    } on ArgumentError catch (e) {
+      throw FormatException('Data JSON tidak valid untuk BankAccount: ${e.message}');
+    } catch (e) {
+      throw FormatException('Kesalahan saat mem-parsing JSON untuk BankAccount: $e');
+    }
+  }
+
+  @override
+  String toString() {
+    return 'Nomor Akun: $accountNumber, Pemilik: $ownerName, Saldo: \$${balance.toStringAsFixed(2)}';
+  }
+}
+
+void main() {
+  var account = BankAccount.create(
+    accountNumber: 'ABC123',
+    ownerName: 'Budi Santoso',
+    initialBalance: 500000,
+  );
+  print(account);
+}
+            </code></pre>
+        </div>
+        <button class="btn" onclick="openModal('84cb298211939f477003aad314c60a99')">
+        Lihat Kode
+      </button>
+    </div>
+
+    <!-- Slide 9: Generic Extensions -->
+    <div class="card">
+        <div class="card-header"><h2>Multiple Redirecting Levels</h2></div>
+        <div class="card-body">
+            <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+
+class Product {
+  final String id;
+  final String name;
+  final double price;
+  final String category;
+  final int stock;
+  final DateTime? expiryDate;
+
+  Product({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.category,
+    required this.stock,
+    this.expiryDate,
+  });
+
+  Product.basic(String id, String name, double price)
+      : this(
+          id: id,
+          name: name,
+          price: price,
+          category: 'General',
+          stock: 0,
+        );
+
+  Product.withCategory(String id, String name, double price, String category)
+      : this(
+          id: id,
+          name: name,
+          price: price,
+          category: category,
+          stock: 0,
+        );
+
+  Product.full({
+    required String id,
+    required String name,
+    required double price,
+    required String category,
+    required int stock,
+    DateTime? expiry,
+  }) : this(
+          id: id,
+          name: name,
+          price: price,
+          category: category,
+          stock: stock,
+          expiryDate: expiry,
+        );
+
+  @override
+  String toString() {
+    return 'Product(id: $id, name: $name, price: $price, category: $category, stock: $stock, expiryDate: $expiryDate)';
+  }
+}
+
+void main() {
+  var basic = Product.basic('P001', 'Item 1', 10.0);
+  var categorized = Product.withCategory('P002', 'Item 2', 20.0, 'Electronics');
+  var full = Product.full(
+    id: 'P003',
+    name: 'Item 3',
+    price: 30.0,
+    category: 'Food',
+    stock: 100,
+    expiry: DateTime.now().add(Duration(days: 30)),
+  );
+
+  print('Basic Product: $basic');
+  print('Categorized Product: $categorized');
+  print('Full Product: $full');
+}
+            </code></pre>
+        </div>
+        <button class="btn" onclick="openModal('12c709e4559f7be6d8d861d4b5a75298')">
+        Lihat Kode
+      </button>
+
+    </div>
+
+  
+
+    <!-- Slide 14: Ringkasan & Best Practices (full) -->
+     <div class="card">
+        <div class="card-header">
+            <h2>🚀 Redirecting Constructor · Ringkasan & Best Practices</h2>
+        </div>
+        <div class="card-body">
+            <div class="grid-rain">
+                <!-- Ringkasan materi redirecting constructor -->
+                <div>
+                    <h3>📌 Ringkasan:</h3>
+                    <ul>
+                        <li><strong>Redirecting constructor</strong>: <code>: this(...)</code> tanpa body</li>
+                        <li>Memanggil constructor lain di <strong>class yang sama</strong></li>
+                        <li>✅ Mengurangi duplikasi kode (<strong>DRY principle</strong>)</li>
+                        <li>❌ Tidak bisa berisi logic kompleks (hanya delegasi)</li>
+                        <li>Final fields tetap bisa diinisialisasi dengan rapi</li>
+                        <li>Ideal untuk: <strong>default parameters</strong>, <strong>convenience constructors</strong></li>
+                    </ul>
+                </div>
+                <!-- Best Practices khusus redirecting constructor -->
+                <div>
+                    <h3>✨ Best Practices:</h3>
+                    <ul>
+                        <li>📐 <strong>Keep chains short</strong> — Hindari rantai redirecting yang terlalu panjang</li>
+                        <li>📛 <strong>Nama konstruktor bermakna</strong>: <code>.fromJson()</code>, <code>.empty()</code>, <code>.withDefault()</code></li>
+                        <li>📄 <strong>Dokumentasi jelas</strong>: Tambahkan komentar pada tiap konstruktor pengarah</li>
+                        <li>⚡ <strong>Redirecting vs Factory</strong>: Redirecting = delegasi murni • Factory = logic kompleks / caching</li>
+                        <li>🧩 <strong>Gunakan untuk parameter default</strong> dan variasi objek tanpa duplikasi inisialisasi</li>
+                        <li>🔁 <strong>Jangan滥用 logic</strong> — Jika perlu validasi rumit, lebih baik gunakan factory + private constructor</li>
+                    </ul>
+                </div>
+            </div>
+
+
+    <!-- Slide 9: Generic Extensions -->
+    <div class="card">
+        <div class="card-header"><h2>Praktik 2 – API Response dengan Redirecting</h2></div>
+        <div class="card-body">
+            <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+
+class ApiResponse<T> {
+  final bool success;
+  final T? data;
+  final String? error;
+  final int statusCode;
+  final DateTime timestamp;
+
+  // Main constructor
+  ApiResponse({
+    required this.success,
+    this.data,
+    this.error,
+    required this.statusCode,
+    required this.timestamp,
+  });
+
+  // Success response
+  ApiResponse.success(T data)
+      : this(
+          success: true,
+          data: data,
+          statusCode: 200,
+          timestamp: DateTime.now(),
+        );
+
+  // Error response
+  ApiResponse.error(String error, int statusCode)
+      : this(
+          success: false,
+          error: error,
+          statusCode: statusCode,
+          timestamp: DateTime.now(),
+        );
+
+  // Not found
+  ApiResponse.notFound()
+      : this(
+          success: false,
+          error: 'Resource not found',
+          statusCode: 404,
+          timestamp: DateTime.now(),
+        );
+
+  // Unauthorized
+  ApiResponse.unauthorized()
+      : this(
+          success: false,
+          error: 'Unauthorized access',
+          statusCode: 401,
+          timestamp: DateTime.now(),
+        );
+
+  // From JSON
+  factory ApiResponse.fromJson(
+    Map<String, dynamic> json,
+    T Function(dynamic) fromJsonT,
+  ) {
+    return ApiResponse(
+      success: json['success'] ?? false,
+      data: json['data'] != null ? fromJsonT(json['data']) : null,
+      error: json['error'],
+      statusCode: json['statusCode'] ?? 500,
+      timestamp: DateTime.parse(json['timestamp'] ?? DateTime.now().toIso8601String()),
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ApiResponse(success: $success, data: $data, error: $error, statusCode: $statusCode, timestamp: $timestamp)';
+  }
+}
+
+void main() {
+  var success = ApiResponse.success('Data loaded');
+  var error = ApiResponse.error('Server error', 500);
+  var notFound = ApiResponse.notFound();
+  var unauthorized = ApiResponse.unauthorized();
+
+  print(success);
+  print(error);
+  print(notFound);
+  print(unauthorized);
+}
+            </code></pre>
+        </div>
+        <button class="btn" onclick="openModal('12c709e4559f7be6d8d861d4b5a75298')">
+        Lihat Kode
+      </button>
+
+    </div>
+
+    <!-- Slide 9: Generic Extensions -->
+    <div class="card">
+        <div class="card-header"><h2> Redirecting Constructor dengan Initializer List</h2></div>
+        <div class="card-body">
+            <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+
+class User {
+  final String id;
+  final String username;
+  final String email;
+  final DateTime createdAt;
+  final bool isActive;
+
+  User({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.createdAt,
+    required this.isActive,
+  });
+
+  User.guest()
+      : this(
+          id: 'guest_${DateTime.now().millisecondsSinceEpoch}',
+          username: 'Guest',
+          email: 'guest@example.com',
+          createdAt: DateTime.now(),
+          isActive: false,
+        );
+
+  User.fromUsername(String username)
+      : this(
+          id: 'user_${username.toLowerCase()}',
+          username: username,
+          email: '${username.toLowerCase()}@example.com',
+          createdAt: DateTime.now(),
+          isActive: true,
+        );
+
+  factory User.create(String email, String password) {
+    if (!email.contains('@')) {
+      throw ArgumentError('Invalid email');
+    }
+    if (password.length < 8) {
+      throw ArgumentError('Password too short');
+    }
+
+    return User(
+      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+      username: email.split('@').first,
+      email: email,
+      createdAt: DateTime.now(),
+      isActive: true,
+    );
+  }
+}
+            </code></pre>
+        </div>
+        <button class="btn" onclick="openModal('12c709e4559f7be6d8d861d4b5a75298')">
+        Lihat Kode
+      </button>
+
+    </div>
+
+          
+        
+        
+    <div class="card">
+            <h2> <pre>
+              Buat Circle class dengan:
+              Main constructor dengan radius
+              Redirecting dari diameter
+              Redirecting dari keliling</pre></h2>
+           
+        </div>
+        <div class="card">
+            <pre>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A                 
+class Circle {
+  final double radius;
+
+  // Main constructor dengan radius
+  Circle(this.radius);
+
+  // Redirecting dari diameter
+  Circle.fromDiameter(double diameter) : this(diameter / 2);
+
+  // Redirecting dari keliling
+  Circle.fromCircumference(double circumference) : this(circumference / (2 * 3.141592653589793));
+
+  @override
+  String toString() {
+    return 'Circle(radius: $radius)';
+  }
+}
+
+void main() {
+  var circle1 = Circle(5);
+  var circle2 = Circle.fromDiameter(10);
+  var circle3 = Circle.fromCircumference(31.4159265359);
+
+  print(circle1);
+  print(circle2);
+  print(circle3);
+}
+            </pre>
+            <button class="btn" onclick="openModal('220e36901e20afaa7a381eee05f57f9a')">
+        Lihat Kode
+      </button>
+
+      <div class="card">
+        <div class="card-header"><h2> Best Practices Redirecting Constructor</h2></div>
+        <div class="card-body">
+            <ul>
+                <li>Gunakan untuk:</li>
+                <li>Default parameter values
+                    Convenience constructors
+                    Alternative ways to create objects</li>
+                <li> Hindari untuk:</li>
+                <li>Complex logic (gunakan factory)
+                    Caching (gunakan factory)
+                    Subclass creation (gunakan factory)</li>
+               <li>Tips:</li>
+              <li>Keep redirecting chains short
+                  Document the purpose of each constructor
+                  Use meaningful names</li>
+
+              <li>Ringkasan:
+                  1. Redirecting constructor: this(...) tanpa body
+                  2. Untuk memanggil constructor lain di class yang sama
+                  3. Mengurangi duplikasi kode
+                  4. Tidak bisa berisi logic kompleks</li>
+            </ul>
+         
+        </div>
+    </div>     
+               
+
+
+     <!-- MODAL DINAMIS (Cukup Satu Saja) -->
+  <div id="dynamicModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <iframe id="modalIframe" src=""></iframe>
+    </div>
+  </div>
+
+  <script>
+    function openModal(gistId) {
+      const modal = document.getElementById("dynamicModal");
+      const iframe = document.getElementById("modalIframe");
+
+      // Load link secara otomatis saat diklik
+      iframe.src = `https://dartpad.dev/embed-dart.html?id=${gistId}&null_safety=true&run=true&theme=light`;
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden"; // Biar ga bisa scroll saat modal buka
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("dynamicModal");
+      const iframe = document.getElementById("modalIframe");
+
+      modal.style.display = "none";
+      iframe.src = ""; // Bersihkan iframe biar ga berat
+      document.body.style.overflow = "auto";
+    }
+
+    // Klik di luar modal untuk tutup
+    window.onclick = function (event) {
+      const modal = document.getElementById("dynamicModal");
+      if (event.target == modal) closeModal();
+    }
+  </script>
+</div>
+
+</body>
+</html>
