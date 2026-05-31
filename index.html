@@ -645,41 +645,6 @@ void main() {
 
     </div>
 
-  
-
-    <!-- Slide 14: Ringkasan & Best Practices (full) -->
-     <div class="card">
-        <div class="card-header">
-            <h2>🚀 Redirecting Constructor · Ringkasan & Best Practices</h2>
-        </div>
-        <div class="card-body">
-            <div class="grid-rain">
-                <!-- Ringkasan materi redirecting constructor -->
-                <div>
-                    <h3>📌 Ringkasan:</h3>
-                    <ul>
-                        <li><strong>Redirecting constructor</strong>: <code>: this(...)</code> tanpa body</li>
-                        <li>Memanggil constructor lain di <strong>class yang sama</strong></li>
-                        <li>✅ Mengurangi duplikasi kode (<strong>DRY principle</strong>)</li>
-                        <li>❌ Tidak bisa berisi logic kompleks (hanya delegasi)</li>
-                        <li>Final fields tetap bisa diinisialisasi dengan rapi</li>
-                        <li>Ideal untuk: <strong>default parameters</strong>, <strong>convenience constructors</strong></li>
-                    </ul>
-                </div>
-                <!-- Best Practices khusus redirecting constructor -->
-                <div>
-                    <h3>✨ Best Practices:</h3>
-                    <ul>
-                        <li>📐 <strong>Keep chains short</strong> — Hindari rantai redirecting yang terlalu panjang</li>
-                        <li>📛 <strong>Nama konstruktor bermakna</strong>: <code>.fromJson()</code>, <code>.empty()</code>, <code>.withDefault()</code></li>
-                        <li>📄 <strong>Dokumentasi jelas</strong>: Tambahkan komentar pada tiap konstruktor pengarah</li>
-                        <li>⚡ <strong>Redirecting vs Factory</strong>: Redirecting = delegasi murni • Factory = logic kompleks / caching</li>
-                        <li>🧩 <strong>Gunakan untuk parameter default</strong> dan variasi objek tanpa duplikasi inisialisasi</li>
-                        <li>🔁 <strong>Jangan滥用 logic</strong> — Jika perlu validasi rumit, lebih baik gunakan factory + private constructor</li>
-                    </ul>
-                </div>
-            </div>
-
 
     <!-- Slide 9: Generic Extensions -->
     <div class="card">
