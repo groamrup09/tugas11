@@ -919,32 +919,37 @@ void main() {
       </button>
         </div>
 
-      <div class="card">
-        <div class="card-header"><h2> Best Practices Redirecting Constructor</h2></div>
-        <div class="card-body">
-            <ul>
-                <li>Gunakan untuk:</li>
-                <li>Default parameter values
-                    Convenience constructors
-                    Alternative ways to create objects</li>
-                <li> Hindari untuk:</li>
-                <li>Complex logic (gunakan factory)
-                    Caching (gunakan factory)
-                    Subclass creation (gunakan factory)</li>
-               <li>Tips:</li>
-              <li>Keep redirecting chains short
-                  Document the purpose of each constructor
-                  Use meaningful names</li>
 
-              <li>Ringkasan:
-                  1. Redirecting constructor: this(...) tanpa body
-                  2. Untuk memanggil constructor lain di class yang sama
-                  3. Mengurangi duplikasi kode
-                  4. Tidak bisa berisi logic kompleks</li>
+<div class="card">
+    <div class="card-header">
+        <h2>🚀 Redirecting Constructor · Ringkasan & Best Practices</h2>
+    </div>
+    <div class="card-body">
+      
+        <div>
+            <h3>📌 Ringkasan:</h3>
+            <ul>
+                <li><strong>Redirecting constructor</strong>: <code>: this(...)</code> tanpa body</li>
+                <li>Memanggil constructor lain di <strong>class yang sama</strong></li>
+                <li>✅ Mengurangi duplikasi kode (<strong>DRY principle</strong>)</li>
+                <li>❌ Tidak bisa berisi logic kompleks (hanya delegasi)</li>
+                <li>Final fields tetap bisa diinisialisasi dengan rapi</li>
+                <li>Ideal untuk: <strong>default parameters</strong>, <strong>convenience constructors</strong></li>
             </ul>
-         
         </div>
-    </div>     
+        <div style="margin-top: 20px;">
+            <h3>✨ Best Practices:</h3>
+            <ul>
+                <li>📐 <strong>Keep chains short</strong> — Hindari rantai redirecting yang terlalu panjang</li>
+                <li>📛 <strong>Nama konstruktor bermakna</strong>: <code>.fromJson()</code>, <code>.empty()</code>, <code>.withDefault()</code></li>
+                <li>📄 <strong>Dokumentasi jelas</strong>: Tambahkan komentar pada tiap konstruktor pengarah</li>
+                <li>⚡ <strong>Redirecting vs Factory</strong>: Redirecting = delegasi murni • Factory = logic kompleks / caching</li>
+                <li>🧩 <strong>Gunakan untuk parameter default</strong> dan variasi objek tanpa duplikasi inisialisasi</li>
+                <li>🔁 <strong>Jangan logic</strong> — Jika perlu validasi rumit, lebih baik gunakan factory + private constructor</li>
+            </ul>
+        </div>
+    </div>
+</div> 
                
 
 
