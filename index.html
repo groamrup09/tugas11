@@ -232,7 +232,7 @@ print('Point on X-axis: $pointOnX');
 print('Point on Y-axis: $pointOnY');
 }</pre>
         </div>
-        <button class="btn" onclick="openModal('84b62f045af0a12893decc0c2753b1db')">
+        <button class="btn" onclick="openModal('fa8a5b74ec77422098598138890ad988')">
         Lihat Kode
       </button>
     </div>
@@ -264,9 +264,10 @@ height = 50;
 }
 }</pre>
         </div>
-        <button class="btn" onclick="openModal('26747f4d6cbd5c672154478070e37a29')">
+        <button class="btn" onclick="openModal('838675eca1355cbaf6ce064e37a03b43')">
         Lihat Kode
       </button>
+        <p>Masalah utamanya bukan karena redirecting constructor, melainkan karena Anda mencoba mengisi field final di dalam body constructor</p>
     </div>
 
   <!-- Slide 5: Sintaks Extension -->
@@ -306,7 +307,7 @@ print('Golden Ratio Rectangle: $goldenRect');
                 
 </pre>
         </div>
-         <button class="btn" onclick="openModal('64c817f6849ce3aa9e012c99bd8d0d6a')">
+         <button class="btn" onclick="openModal('a719c158d4371987b3b1d65908580d39')">
         Lihat Kode
       </button>
 
@@ -321,25 +322,66 @@ print('Golden Ratio Rectangle: $goldenRect');
 // Nama: Azriel Miracle Yuandre
 // Nim: 251410024
 // Kelas: SI2A            
-   class Person {
-final String name;
-final int age;
-final String? email;
-// Main constructor dengan named parameters
-Person({required this.name, required this.age, this.email});
-// Redirecting dengan default values
-Person.anonymous() : this(name: 'Anonymous', age: 0);
-Person.fromName(String name) : this(name: name, age: 0);
-Person.adult(String name) : this(name: name, age: 18);
-Person.child(String name, int years)
-: this(name: name, age: years, email: null);
-@override
-String toString() {
-return 'Name: $name, Age: $age, Email: ${email ?? "N/A"}';
+  // Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+
+class Person {
+  final String name;
+  final int age;
+  final String? email;
+
+  // Main constructor dengan named parameters
+  Person({required this.name, required this.age, this.email});
+
+  // Redirecting constructors dengan default values
+  Person.anonymous() : this(name: 'Anonymous', age: 0);
+
+  Person.fromName(String name) : this(name: name, age: 0);
+
+  Person.adult(String name) : this(name: name, age: 18);
+
+  Person.child(String name, int years)
+      : this(name: name, age: years, email: null);
+
+  @override
+  String toString() {
+    return 'Name: $name, Age: $age, Email: ${email ?? "N/A"}';
+  }
 }
+
+void main() {
+  // Main constructor
+  Person p1 = Person(
+    name: "Azriel",
+    age: 19,
+    email: "azriel@gmail.com",
+  );
+
+  // Anonymous constructor
+  Person p2 = Person.anonymous();
+
+  // FromName constructor
+  Person p3 = Person.fromName("Budi");
+
+  // Adult constructor
+  Person p4 = Person.adult("Siti");
+
+  // Child constructor
+  Person p5 = Person.child("Andi", 10);
+
+  print("Data Person:");
+  print(p1);
+  print(p2);
+  print(p3);
+  print(p4);
+  print(p5);
 }
 </code></pre>
         </div>
+         <button class="btn" onclick="openModal('b635fe15edd445c0cd54bd72a230e4f2')">
+        Lihat Kode
+      </button>
     </div>
 
     <!-- Slide 7: Null Safety -->
@@ -431,7 +473,7 @@ void main() {
 }
 
             </code></pre>
-             <button class="btn" onclick="openModal('8f76d6b3b2b4abc829be7757c3970084')">
+             <button class="btn" onclick="openModal('f019e66fd7ae116cb7dfa45920a9add9')">
         Lihat Kode
       </button>
         </div>
@@ -508,7 +550,7 @@ void main() {
 }
             </code></pre>
         </div>
-        <button class="btn" onclick="openModal('84cb298211939f477003aad314c60a99')">
+        <button class="btn" onclick="openModal('f05ce0ea155751858da92679bdb91c2a')">
         Lihat Kode
       </button>
     </div>
@@ -597,7 +639,7 @@ void main() {
 }
             </code></pre>
         </div>
-        <button class="btn" onclick="openModal('12c709e4559f7be6d8d861d4b5a75298')">
+        <button class="btn" onclick="openModal('27621c830c9e047619f6815caa182f54')">
         Lihat Kode
       </button>
 
@@ -644,6 +686,10 @@ void main() {
         <div class="card-header"><h2>Praktik 2 – API Response dengan Redirecting</h2></div>
         <div class="card-body">
             <pre><code>
+// Nama: Azriel Miracle Yuandre
+// Nim: 251410024
+// Kelas: SI2A
+
 // Nama: Azriel Miracle Yuandre
 // Nim: 251410024
 // Kelas: SI2A
@@ -705,12 +751,14 @@ class ApiResponse<T> {
     Map<String, dynamic> json,
     T Function(dynamic) fromJsonT,
   ) {
-    return ApiResponse(
+    return ApiResponse<T>(
       success: json['success'] ?? false,
       data: json['data'] != null ? fromJsonT(json['data']) : null,
       error: json['error'],
       statusCode: json['statusCode'] ?? 500,
-      timestamp: DateTime.parse(json['timestamp'] ?? DateTime.now().toIso8601String()),
+      timestamp: DateTime.parse(
+        json['timestamp'] ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
 
@@ -721,10 +769,10 @@ class ApiResponse<T> {
 }
 
 void main() {
-  var success = ApiResponse.success('Data loaded');
-  var error = ApiResponse.error('Server error', 500);
-  var notFound = ApiResponse.notFound();
-  var unauthorized = ApiResponse.unauthorized();
+  var success = ApiResponse<String>.success('Data loaded');
+  var error = ApiResponse<String>.error('Server error', 500);
+  var notFound = ApiResponse<String>.notFound();
+  var unauthorized = ApiResponse<String>.unauthorized();
 
   print(success);
   print(error);
@@ -733,7 +781,7 @@ void main() {
 }
             </code></pre>
         </div>
-        <button class="btn" onclick="openModal('12c709e4559f7be6d8d861d4b5a75298')">
+        <button class="btn" onclick="openModal('8a2c80222c99fdca40f2849da89cc0a9')">
         Lihat Kode
       </button>
 
@@ -785,6 +833,7 @@ class User {
     if (!email.contains('@')) {
       throw ArgumentError('Invalid email');
     }
+
     if (password.length < 8) {
       throw ArgumentError('Password too short');
     }
@@ -797,10 +846,25 @@ class User {
       isActive: true,
     );
   }
+
+  @override
+  String toString() {
+    return 'User(id: $id, username: $username, email: $email, createdAt: $createdAt, isActive: $isActive)';
+  }
+}
+
+void main() {
+  User guest = User.guest();
+  User user1 = User.fromUsername('Azriel');
+  User user2 = User.create('azriel@gmail.com', 'password123');
+
+  print(guest);
+  print(user1);
+  print(user2);
 }
             </code></pre>
         </div>
-        <button class="btn" onclick="openModal('12c709e4559f7be6d8d861d4b5a75298')">
+        <button class="btn" onclick="openModal('e7abf43c43779450da7201d55f38f4bd')">
         Lihat Kode
       </button>
 
@@ -850,7 +914,7 @@ void main() {
   print(circle3);
 }
             </pre>
-            <button class="btn" onclick="openModal('220e36901e20afaa7a381eee05f57f9a')">
+            <button class="btn" onclick="openModal('d5e95349acbeb81fb6fa009e563e435a')">
         Lihat Kode
       </button>
 
